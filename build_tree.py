@@ -2,8 +2,8 @@
 Build the tree used to scan figures
 """
 from functools import reduce
-from solver.build_level import get_node_changes
-from solver.tree_utils import prune_tree
+from build_level import get_node_changes
+from tree_utils import prune_tree
 
 
 def new_tree(tree):
@@ -56,8 +56,8 @@ def make_node_changes(tree, changes):
     Combine the setting of offspring nodes and the adding
     of new nodes together into one function
     """
-    return list(map(set_offspring_values(tree),
-                    changes))[-1] + add_on_new_nodes(changes)
+    return tuple(map(set_offspring_values(tree),
+                     changes))[-1] + add_on_new_nodes(changes)
 
 
 def afunc(arg1, arg2):
@@ -78,7 +78,7 @@ def scan_for_snumb(tree):
     """
     Scan the tree for the highest number offspring link
     """
-    return max(reduce(afunc, list(map(nmap, tree))) + [0]) + 1
+    return max(reduce(afunc, tuple(map(nmap, tree))) + [0]) + 1
 
 
 def gen_off_list(sindx):

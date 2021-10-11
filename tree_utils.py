@@ -37,11 +37,11 @@ def get_nokeep(tree):
     return list(filter(find_nonkeepers, enumerate(tree)))
 
 
-def get_indices(delete_tuple):
+def get_indices(element):
     """
-    Return first element of tuple
+    Return first element
     """
-    return delete_tuple[0]
+    return element[0]
 
 
 def find_nonkeepers(node):
@@ -90,7 +90,7 @@ def get_fig_values(tree):
 
 def do_node_delete(tree):
     """
-    Delete a node fromthe tree.
+    Delete a node from the tree.
     """
     def innerf(indx):
         tree[tree[indx]['prev_gen']]['offspring'].remove(indx)

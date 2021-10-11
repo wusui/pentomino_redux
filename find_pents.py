@@ -1,8 +1,8 @@
 """
 Find the pentomino value for all leaf nodes in the tree
 """
-from solver.build_tree import new_tree
-from solver.tree_utils import extract_path, fig_comp
+from build_tree import new_tree
+from tree_utils import extract_path, fig_comp
 
 
 def set_pents(tree):
@@ -70,15 +70,15 @@ def xnorm(path):
     """
     line up rotated figure so minimum x value is 0
     """
-    return list(map(shiftx(min(map(get_x_coord, path))), path))
+    return tuple(map(shiftx(min(map(get_x_coord, path))), path))
 
 
 def ynorm(path):
     """
     Line up rotated figure so that minimum y value where x = 0 is 0
     """
-    return list(map(shifty(min(map(get_y_coord, filter(chk_y_path, path)))),
-                    path))
+    return tuple(map(shifty(min(map(get_y_coord, filter(chk_y_path, path)))),
+                     path))
 
 
 def rotate_work(path):
@@ -89,7 +89,7 @@ def rotate_work(path):
         return fig_comp(rot_path_compute(gen_new_path(rot_type)))
 
     def gen_new_path(rot_type):
-        return list(map(gen_rotated_point(rot_type), path)) + [[0, 0]]
+        return tuple(list(map(gen_rotated_point(rot_type), path)) + [[0, 0]])
     return innerf
 
 
@@ -124,12 +124,20 @@ def rot_path_compute(rot_path):
     return wrap_remove(ynorm(xnorm(rot_path)))
 
 
+def remove_zeros(point_value):
+    """
+    Don't check origin tile in some cases
+    """
+    if point_value == [0, 0]:
+        return False
+    return True
+
+
 def wrap_remove(rot_path):
     """
     Once the new figure has been lined up properly, get rid of origin
     """
-    rot_path.remove([0, 0])
-    return rot_path
+    return filter(remove_zeros, rot_path)
 
 
 def find_pents(path):
@@ -151,4 +159,4 @@ def build_pent_tree():
     """
     Build tree with pentomino information in pent_type field
     """
-    return list(set_pents(new_tree(get_origin())))
+    return tuple(set_pents(new_tree(get_origin())))
