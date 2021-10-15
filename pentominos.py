@@ -1,44 +1,45 @@
 """
 Top level function calls for pentomino solver
 """
-from find_pents import build_pent_tree
-from find_solutions import solve_case
+from tree_find_pents import build_pent_tree
+from rect_find_x import solve_case
 
 
 def fill_rectangles_with_pentominos(io_obj=print, low=3, high=7):
     """
     Loop through rectangle sizes and solve for each.  build_pent_tree
-    is called to initialize the tree.  Use this for just printed solutions
+    is called to initialize the tree.  Io_obj is a routine to be used
+    to display or store results.  It defaults to a straight print in
+    python3, but can be overridden.
     """
-    return solve_rectangles(build_pent_tree(), tuple(range(low, high)),
-                            io_obj)
+    _solve_rectangles(build_pent_tree(), tuple(range(low, high)), io_obj)
 
 
-def solve_rectangles(tree, zrange, io_obj):
+def _solve_rectangles(tree, zrange, io_obj):
     """
-    Return tuple of solutions for pentomino filling for each rectangle
-    height
+    Call wrap_rectangle for all values inside the range of rectangle heights
     """
-    return tuple(map(wrap_rectangle(tree)(io_obj), zrange))
+    tuple(map(_wrap_rectangle(tree)(io_obj), zrange))
 
 
-def wrap_rectangle(tree):
+def _wrap_rectangle(tree):
     """
-    Curry process_rectangle calls
+    Curry process_rectangle calls (called from inside a map function)
     """
-    def inner0(io_obj):
-        def inner1(ysize):
-            return process_rectangle(tree, ysize, io_obj)
-        return inner1
-    return inner0
+    def _inner0(io_obj):
+        def _inner1(ysize):
+            _process_rectangle(tree, ysize, io_obj)
+        return _inner1
+    return _inner0
 
 
-def process_rectangle(tree, ysize, io_obj):
+def _process_rectangle(tree, ysize, io_obj):
     """
-    Call solve case.  Generate layout of the rectangle first
+    Call solve case.  Generate layout of the rectangle first (ysize rows each
+    of which are 60 // ysize squares long)
     """
-    return solve_case([[0 for _ in range(60 // ysize)]
-                       for _ in range(ysize)], tree, [], io_obj)
+    solve_case([[0 for _ in range(60 // ysize)]
+                for _ in range(ysize)], tree, io_obj)
 
 
 if __name__ == "__main__":
